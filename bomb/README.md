@@ -5,15 +5,6 @@
   - [PDF](http://csapp.cs.cmu.edu/3e/bomblab.pdf)
   - [Release Notes](http://csapp.cs.cmu.edu/3e/bomblab-release.html)
 
-## Solutions
-
-- [Phase 1](solutions/phase_1.md)
-- Phase 2
-- Phase 3
-- Phase 4
-- Phase 5
-- Phase 6
-
 ## Self-Study Handout
 
 - Download: [https://csapp.cs.cmu.edu/3e/bomb.tar](https://csapp.cs.cmu.edu/3e/bomb.tar)
@@ -31,6 +22,15 @@ bomb/
 ├── [-rw-r--r-- 4.0K]  bomb.c
 └── [-rw-rw-r--   49]  README
 ```
+
+## Solutions
+
+- [Phase 1](solutions/phase_1.md)
+- Phase 2
+- Phase 3
+- Phase 4
+- Phase 5
+- Phase 6
 
 ## Hints
 
