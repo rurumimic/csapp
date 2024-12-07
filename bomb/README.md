@@ -23,9 +23,9 @@ bomb/
 └── [-rw-rw-r--   49]  README
 ```
 
-## Solutions
+## Six Phases
 
-- [Phase 1](solutions/phase_1.md)
+- Phase 1: [solution](solutions/phase_1.md), [asm](phases/phase_1.asm)
 - Phase 2
 - Phase 3
 - Phase 4
