@@ -25,8 +25,8 @@ bomb/
 
 ## Six Phases
 
-- Phase 1: [solution](solutions/phase_1.md), [asm](phases/phase_1.asm)
-- Phase 2
+- Phase 1: [solution](solutions/phase_1.md), [phase_1.asm](phases/phase_1.asm)
+- Phase 2: [solution](solutions/phase_2.md), [phase_2.asm](phases/phase_2.asm)
 - Phase 3
 - Phase 4
 - Phase 5
