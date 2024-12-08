@@ -40,15 +40,14 @@ bomb/
 
 ```bash
 gdb ./bomb/bomb
+lldb ./bomb/bomb
 ```
 
 #### Disassemble Phase 1
 
-```bash
-(gdb) disas phase_1 # disassemble phase_1
-```
-
 ```asm
+(gdb) disas phase_1 # disassemble phase_1
+
 Dump of assembler code for function phase_1:
    0x0000000000400ee0 <+0>:     sub    $0x8,%rsp
    0x0000000000400ee4 <+4>:     mov    $0x402400,%esi
@@ -59,6 +58,20 @@ Dump of assembler code for function phase_1:
    0x0000000000400ef7 <+23>:    add    $0x8,%rsp
    0x0000000000400efb <+27>:    ret
 End of assembler dump.
+```
+
+```asm
+(lldb) di -n phase_1 # disassemble --name phase_1
+
+bomb`phase_1:
+bomb[0x400ee0] <+0>:  subq   $0x8, %rsp
+bomb[0x400ee4] <+4>:  movl   $0x402400, %esi ; imm = 0x402400
+bomb[0x400ee9] <+9>:  callq  0x401338       ; strings_not_equal
+bomb[0x400eee] <+14>: testl  %eax, %eax
+bomb[0x400ef0] <+16>: je     0x400ef7       ; <+23>
+bomb[0x400ef2] <+18>: callq  0x40143a       ; explode_bomb
+bomb[0x400ef7] <+23>: addq   $0x8, %rsp
+bomb[0x400efb] <+27>: retq
 ```
 
 #### Examine Address
@@ -73,6 +86,10 @@ End of assembler dump.
 (gdb) ??? 0x402400
 
 0x402400:       "????????"
+```
+
+```bash
+(lldb) memory read -c256 0x402400
 ```
 
 #### Defuse Phase 1
