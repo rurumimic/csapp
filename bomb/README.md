@@ -107,3 +107,14 @@ which to blow yourself up. Have a nice day!
 Phase 1 defused. How about the next one?
 ```
 
+### Save solutions
+
+```bash
+echo "???" >> solutions/solutions.txt
+```
+
+```bash
+gdb ./bomb/bomb
+(gdb) r solutions/solutions.txt
+```
+
