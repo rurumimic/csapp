@@ -3,14 +3,18 @@
 Run Debugger:
 
 ```bash
+gdb ./bomb/bomb
 lldb ./bomb/bomb
 ```
 
 ## Disassemble Phase 2
 
 ```asm
+(gdb) disas phase_2
 (lldb) di -n phase_2
+```
 
+```asm
 bomb`phase_2:
 0x400efc <+0>:  pushq  %rbp
 0x400efd <+1>:  pushq  %rbx
@@ -42,6 +46,7 @@ bomb`phase_2:
 ## Disassemble `read_six_numbers`
 
 ```asm
+(gdb) disas read_six_numbers # disas 0x40145c
 (lldb) di -n read_six_numbers
 
 bomb`read_six_numbers:
