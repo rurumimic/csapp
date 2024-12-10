@@ -23,10 +23,10 @@ bomb`phase_2:
 0x400efe <+2>:  subq   $0x28, %rsp
 ```
 
-- 0x28 = 0x10 + 0x18
-  - 0x08 (return address) + 0x08 (16-byte alignment)
+- `0x28` = `0x10` + `0x18`
+  - `0x08` (return address) + `0x08` (16-byte alignment)
     - 16 byte alignment: floating point, SIMD
-  - 0x18 (six numbers)
+  - `0x18` (six numbers)
 
 Call `read_six_numbers`:
 
@@ -97,32 +97,32 @@ Numbers stored on the stack in 4 bytes:
 
 Assembly logic sequence:
 
-1. rbx = `0x00007fffffffe1b4` = 2
-1. rbp = `0x00007fffffffe1c8`
-1. jmp <+27>: loop 1 (1 + 1 = 2)
-   1. eax = rbx - 0x4 = 1 = `x/d '$rbx - 0x4'`
-   1. eax = eax + eax = 1 + 1 = 2
-   1. eax (2) == rbx (2)
-   1. je <+41>
-   1. rbx + 0x4 = `0x00007fffffffe1b8` = 4 = `x/d $rbx`
-   1. rbp != rbx
-1. jne <+27>: loop 2 (2 + 2 = 4)
-   1. eax = rbx - 0x4 = 2 = `x/d '$rbx - 0x4'`
-   1. eax = eax + eax = 2 + 2 = 4
-   1. eax (4) == rbx (4)
-   1. je <+41>
-   1. rbx + 0x4 = `0x00007fffffffe1bc` = 8 = `x/d $rbx`
-   1. rbp != rbx
-1. jne <+27>: loop 3 (4 + 4 = 8)
-1. jne <+27>: loop 4 (8 + 8 = 16)
-1. jen <+27>: loop 5 (16 + 16 = 32)
-   1. eax = rbx - 0x4 = 16 = `x/d '$rbx - 0x4'`
-   1. eax = eax + eax = 16 + 16 = 32
-   1. eax (32) == rbx (32)
-   1. je <+41>
-   1. rbx + 0x4 = `0x00007fffffffe1c8`
-   1. rbp == rbx
-1. jmp <+64>
+1. `rbx` = `0x00007fffffffe1b4` = 2
+1. `rbp` = `0x00007fffffffe1c8`
+1. `jmp <+27>`: loop 1 (1 + 1 = 2)
+   1. `eax` = `rbx - 0x4` = 1 = `x/d '$rbx - 0x4'`
+   1. `eax` = `eax + eax` = 1 + 1 = 2
+   1. `eax` (2) == `rbx` (2)
+   1. `je <+41>`
+   1. `rbx + 0x4` = `0x00007fffffffe1b8` = 4 = `x/d $rbx`
+   1. `rbp != rbx`
+1. `jne <+27>`: loop 2 (2 + 2 = 4)
+   1. `eax` = `rbx - 0x4` = 2 = `x/d '$rbx - 0x4'`
+   1. `eax` = `eax + eax` = 2 + 2 = 4
+   1. `eax` (4) == `rbx` (4)
+   1. `je <+41>`
+   1. `rbx + 0x4` = `0x00007fffffffe1bc` = 8 = `x/d $rbx`
+   1. `rbp != rbx`
+1. `jne <+27>`: loop 3 (4 + 4 = 8)
+1. `jne <+27>`: loop 4 (8 + 8 = 16)
+1. `jen <+27>`: loop 5 (16 + 16 = 32)
+   1. `eax` = `rbx - 0x4` = 16 = `x/d '$rbx - 0x4'`
+   1. `eax` = `eax + eax` = 16 + 16 = 32
+   1. `eax` (32) == `rbx` (32)
+   1. `je <+41>`
+   1. `rbx + 0x4` = `0x00007fffffffe1c8`
+   1. `rbp == rbx`
+1. `jmp <+64>`
 
 Epilogue:
 
@@ -147,10 +147,10 @@ bomb`read_six_numbers:
 bomb[0x40145c] <+0>:  subq   $0x18, %rsp 
 ```
 
-- 0x18 = 0x10 + 0x08
-  - 0x08 (return address) + 0x08 (16-byte alignment)
+- `0x18` = `0x10` + `0x08`
+  - `0x08` (return address) + `0x08` (16-byte alignment)
     - 16 byte alignment: floating point, SIMD
-  - 0x08 (two numbers)
+  - `0x08` (two numbers)
 
 Stack pointer address value movement:
 
@@ -179,12 +179,12 @@ bomb[0x401478] <+28>: leaq   0xc(%rsi), %r9
 bomb[0x40147c] <+32>: leaq   0x8(%rsi), %r8
 ```
 
-1. rdx
-2. rcx
-3. r8
-4. r9
-5. rsp
-6. rsp + 8
+1. `rdx`
+2. `rcx`
+3. `r8`
+4. `r9`
+5. `rsp`
+6. `rsp + 0x8`
 
 Setting the second parameter of the sscanf function:
 
@@ -207,7 +207,7 @@ Protocol of x86-64 System V ABI:
 bomb[0x401485] <+41>: movl   $0x0, %eax
 ```
 
-- clear AL (zero FP args in XMM registers)
+- clear `AL` (zero FP args in XMM registers)
 
 Call sscanf:
 
@@ -234,15 +234,15 @@ rflags = 0x0000000000000202
 ```
 
 - compl: `destination - source`
-  - Zero Flag = 1: dest - src = 0
-  - Sign Flag = 1: dest - src < 0
-  - Carry Flag = 1: dest - src < 0
-  - Overflow Flag = 1: when overflow
+  - Zero Flag = 1: `dest - src = 0`
+  - Sign Flag = 1: `dest - src < 0`
+  - Carry Flag = 1: `dest - src < 0`
+  - Overflow Flag = 1: if an overflow occurs
 - `compl $0x5, %eax`
-  - eax - 5 = 0: ZF = 1
-  - eax - 5 > 0: ZF = 0, SF = 0
-  - eax - 5 < 0: SF = 1
-- jg: (ZF = 0) + (SF == OF)
+  - `eax - 5 = 0`: ZF = 1
+  - `eax - 5 > 0`: ZF = 0, SF = 0
+  - `eax - 5 < 0`: SF = 1
+- `jg`: `ZF == 0` and `SF == OF`
 
 Stack state:
 
@@ -254,12 +254,12 @@ Stack state:
 0x7fffffffe1b0: 01 00 00 00 02 00 00 00 04 00 00 00 08 00 00 00  ................
 ```
 
-| address                     | content        | value                         |
-|-----------------------------|----------------|-------------------------------|
-| rsp + 0x18 (0x7fffffffe1a8) | return address | bomb`phase_2 <+14> (0x400f0a) |
-| rsp + 0x10 (0x7fffffffe1a0) | alignment      |                               |
-| rsp + 0x08 (0x7fffffffe198) | 6th number     | 0x00007fffffffe1c4            |
-| rsp + 0x00 (0x7fffffffe190) | 5th number     | 0x00007fffffffe1c0            |
+| address                         | content        | value                           |
+|---------------------------------|----------------|---------------------------------|
+| `rsp + 0x18` (`0x7fffffffe1a8`) | return address | bomb`phase_2 <+14> (`0x400f0a`) |
+| `rsp + 0x10` (`0x7fffffffe1a0`) | alignment      |                                 |
+| `rsp + 0x08` (`0x7fffffffe198`) | 6th number     | `0x00007fffffffe1c4`            |
+| `rsp + 0x00` (`0x7fffffffe190`) | 5th number     | `0x00007fffffffe1c0`            |
 
 Epilogue:
 
