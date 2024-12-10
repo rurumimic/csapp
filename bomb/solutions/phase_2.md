@@ -254,12 +254,12 @@ Stack state:
 0x7fffffffe1b0: 01 00 00 00 02 00 00 00 04 00 00 00 08 00 00 00  ................
 ```
 
-| address                         | content        | value                           |
-|---------------------------------|----------------|---------------------------------|
-| `rsp + 0x18` (`0x7fffffffe1a8`) | return address | bomb`phase_2 <+14> (`0x400f0a`) |
-| `rsp + 0x10` (`0x7fffffffe1a0`) | alignment      |                                 |
-| `rsp + 0x08` (`0x7fffffffe198`) | 6th number     | `0x00007fffffffe1c4`            |
-| `rsp + 0x00` (`0x7fffffffe190`) | 5th number     | `0x00007fffffffe1c0`            |
+| address                         | content        | value                      |
+|---------------------------------|----------------|----------------------------|
+| `rsp + 0x18` (`0x7fffffffe1a8`) | return address | phase_2 <+14> (`0x400f0a`) |
+| `rsp + 0x10` (`0x7fffffffe1a0`) | alignment      |                            |
+| `rsp + 0x08` (`0x7fffffffe198`) | 6th number     | `0x00007fffffffe1c4`       |
+| `rsp + 0x00` (`0x7fffffffe190`) | 5th number     | `0x00007fffffffe1c0`       |
 
 Epilogue:
 
