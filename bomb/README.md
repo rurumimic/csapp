@@ -28,7 +28,7 @@ bomb/
 - Phase 1: [solution](solutions/phase_1.md), [phase_1.asm](phases/phase_1.asm)
 - Phase 2: [solution](solutions/phase_2.md), [phase_2.asm](phases/phase_2.asm), [phase_2.c](c/phase_2.c)
 - Phase 3: [solution](solutions/phase_3.md), [phase_3.asm](phases/phase_3.asm)
-- Phase 4
+- Phase 4: [solution](solutions/phase_4.md), [phase_4.asm](phases/phase_4.asm)
 - Phase 5
 - Phase 6
 
