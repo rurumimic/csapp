@@ -7,6 +7,16 @@ gdb ./bomb/bomb
 lldb ./bomb/bomb
 ```
 
+```bash
+              7
+         /         \
+      3              11
+    /   \          /    \
+   1     5       9      13
+  / \   / \     / \     / \
+ 0   2 4   6   8  10  12  14
+```
+
 ## Disassemble Phase 4
 
 ```asm
@@ -85,7 +95,7 @@ bomb[0x400fdd] <+15>: sarl   %eax
 1. `edx` -> `eax`: 14
 1. `eax` - `esi` : 14 - 0
 1. `ecx`: `eax` 14
-1. `ecx << 31`: `0b1110` = 0
+1. `ecx >> 31`: `0b1110 >> 31` = `0b0000` = 0
 1. `ecx` + `eax`: 0 + 14 = 14 = `0b1110`
 1. `CF` = `eax >> 1`: `CF` = 0, `eax` = 7
 
@@ -264,5 +274,19 @@ Phase 4 defused:
 
 ```bash
 So you got that one.  Try this one.
+```
+
+---
+
+## Binary Search
+
+```bash
+              7
+         /         \
+      3              11
+    /   \          /    \
+   1     5       9      13
+  / \   / \     / \     / \
+ 0   2 4   6   8  10  12  14
 ```
 
