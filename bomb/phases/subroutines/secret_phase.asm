@@ -1,4 +1,4 @@
-(lldb) di -n secret_phase
+; (lldb) di -n secret_phase
 bomb`secret_phase:
 bomb[0x401242] <+0>:  pushq  %rbx
 bomb[0x401243] <+1>:  callq  0x40149e       ; read_line

@@ -1,4 +1,4 @@
-(lldb) di -n phase_defused
+; (lldb) di -n phase_defused
 bomb`phase_defused:
 bomb[0x4015c4] <+0>:   subq   $0x78, %rsp
 bomb[0x4015c8] <+4>:   movq   %fs:0x28, %rax

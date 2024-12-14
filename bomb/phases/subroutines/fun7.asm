@@ -1,4 +1,4 @@
-(lldb) di -n fun7
+; (lldb) di -n fun7
 bomb`fun7:
 bomb[0x401204] <+0>:  subq   $0x8, %rsp
 bomb[0x401208] <+4>:  testq  %rdi, %rdi
