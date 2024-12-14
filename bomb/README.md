@@ -32,6 +32,8 @@ bomb/
 - Phase 5
 - Phase 6
 
+Subroutines: [phases/subroutines/*.asm](phases/subroutines)
+
 ## Hints
 
 ### Phase 1
