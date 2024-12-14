@@ -1,4 +1,4 @@
-# (lldb) dis -n func4
+; (lldb) dis -n func4
 bomb`func4:
 bomb[0x400fce] <+0>:  subq   $0x8, %rsp
 bomb[0x400fd2] <+4>:  movl   %edx, %eax

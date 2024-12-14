@@ -1,4 +1,4 @@
-# (lldb) di -n read_six_numbers
+; (lldb) di -n read_six_numbers
 bomb`read_six_numbers:
 bomb[0x40145c] <+0>:  subq   $0x18, %rsp
 bomb[0x401460] <+4>:  movq   %rsi, %rdx
