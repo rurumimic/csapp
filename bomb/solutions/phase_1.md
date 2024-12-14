@@ -6,7 +6,7 @@ Run Debugger:
 gdb ./bomb/bomb
 ```
 
-Disassemble Phase 1:
+## Disassemble Phase 1
 
 ```bash
 Reading symbols from ./bomb/bomb...
@@ -24,25 +24,25 @@ Dump of assembler code for function phase_1:
 End of assembler dump.
 ```
 
-Examine Address:
+### Examine Address
 
 ```bash
 (gdb) x/s 0x402400
 0x402400:       "Border relations with Canada have never been better."
 ```
 
-Run Phase 1:
+## Run Phase 1
 
 ```bash
 (gdb) r
-Starting program: /home/keanu/code/github/rurumimic/csapp/bomb/bomb/bomb
+Starting program: bomb
 [Thread debugging using libthread_db enabled]
 Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
 Welcome to my fiendish little bomb. You have 6 phases with
 which to blow yourself up. Have a nice day!
 ```
 
-Answer:
+## Answer
 
 ```bash
 Border relations with Canada have never been better.
