@@ -31,6 +31,8 @@ End of assembler dump.
 0x402400:       "Border relations with Canada have never been better."
 ```
 
+---
+
 ## Run Phase 1
 
 ```bash
@@ -41,6 +43,8 @@ Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
 Welcome to my fiendish little bomb. You have 6 phases with
 which to blow yourself up. Have a nice day!
 ```
+
+---
 
 ## Answer
 
