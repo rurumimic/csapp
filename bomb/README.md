@@ -36,8 +36,11 @@ bomb/
 - Phase 4: [solution](solutions/phase_4.md), [phase_4.asm](phases/phase_4.asm), [phase_4.c](c/phase_4.c)
 - Phase 5: [solution](solutions/phase_5.md), [phase_5.asm](phases/phase_5.asm)
 - Phase 6: [solution](solutions/phase_6.md), [phase_6.asm](phases/phase_6.asm)
+- Secret Phase: [solution](solutions/secret.md)
 
 Subroutines: [phases/subroutines/*.asm](phases/subroutines)
+
+---
 
 ## Hints
 
@@ -129,5 +132,23 @@ echo "???" >> solutions/solutions.txt
 ```bash
 gdb ./bomb/bomb
 (gdb) r solutions/solutions.txt
+```
+
+---
+
+## Bomb Lab Ending
+
+```bash
+Welcome to my fiendish little bomb. You have 6 phases with
+which to blow yourself up. Have a nice day!
+Phase 1 defused. How about the next one?
+That's number 2.  Keep going!
+Halfway there!
+So you got that one.  Try this one.
+Good work!  On to the next...
+Curses, you've found the secret phase!
+But finding it and solving it are quite different...
+Wow! You've defused the secret stage!
+Congratulations! You've defused the bomb!
 ```
 
