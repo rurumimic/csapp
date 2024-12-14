@@ -18,7 +18,7 @@ int func4(int node, int low, int high) {
 	if (node < mid) {
 		return 2 * func4(node, low, mid - 1);
 	} else {
-		return 2 * func4(node, mid + 1, high) + 1;
+		return 2 * func4(node, mid + 1, high) + 1; // +1 when moving right
 	}
 }
 

@@ -7,16 +7,6 @@ gdb ./bomb/bomb
 lldb ./bomb/bomb
 ```
 
-```bash
-              7
-         /         \
-      3              11
-    /   \          /    \
-   1     5       9      13
-  / \   / \     / \     / \
- 0   2 4   6   8  10  12  14
-```
-
 ## Disassemble Phase 4
 
 ```asm
@@ -24,7 +14,7 @@ lldb ./bomb/bomb
 (lldb) di -n phase_4
 ```
 
-Prologue and Get 2 input values:
+### Prologue and 2 input values
 
 ```asm
 bomb`phase_4:
@@ -38,14 +28,14 @@ bomb[0x401029] <+29>: cmpl   $0x2, %eax
 bomb[0x40102c] <+32>: jne    0x401035       ; <+41>
 ```
 
-Examine the string:
+#### Examine the string
 
 ```bash
 (lldb) x/s 0x4025cf
 0x004025cf: "%d %d"
 ```
 
-If `$rsp + 8` less than or equal to 14:
+### Check the range of 1st input value
 
 ```asm
 bomb[0x40102e] <+34>: cmpl   $0xe, 0x8(%rsp)
@@ -53,167 +43,128 @@ bomb[0x401033] <+39>: jbe    0x40103a       ; <+46>
 bomb[0x401035] <+41>: callq  0x40143a       ; explode_bomb
 ```
 
-1. 14 > `$rsp + 8`
-1. `jbe <+46>`
+- `jbe` compares using unsigned logic. 
+- `0 <= $rsp + 8 <= 14`
 
-Call func4:
+### Call func4
 
 ```asm
 bomb[0x40103a] <+46>: movl   $0xe, %edx
 bomb[0x40103f] <+51>: movl   $0x0, %esi
 bomb[0x401044] <+56>: movl   0x8(%rsp), %edi
 bomb[0x401048] <+60>: callq  0x400fce       ; func4
-bomb[0x40104d] <+65>: testl  %eax, %eax
-bomb[0x40104f] <+67>: jne    0x401058       ; <+76>
 ```
 
-- `edx`: 14
-- `esi`: 0
-- `edi`: first argument
-- `eax`: 3 (13, 40)
+- `edx`: `14`
+- `esi`: `0`
+- `edi`: 1st input value
 
-### Call func4 1st
+### After calling func4
 
-Prologue:
+```asm
+bomb[0x401048] <+60>: callq  0x400fce       ; func4
+bomb[0x40104d] <+65>: testl  %eax, %eax
+bomb[0x40104f] <+67>: jne    0x401058       ; <+76>
+bomb[0x401051] <+69>: cmpl   $0x0, 0xc(%rsp)
+bomb[0x401056] <+74>: je     0x40105d       ; <+81>
+bomb[0x401058] <+76>: callq  0x40143a       ; explode_bomb
+bomb[0x40105d] <+81>: addq   $0x18, %rsp
+bomb[0x401061] <+85>: retq
+```
+
+- `eax != 0`: explode bomb
+- `eax == 0`
+  - `2nd input != 0`: explod bomb
+  - `2nd input == 0`: return `phase_4`
+
+**2nd input value must be 0.**
+
+---
+
+## Disassemble func4
+
+### Prologue
 
 ```asm
 bomb`func4:
 bomb[0x400fce] <+0>:  subq   $0x8, %rsp
 ```
 
-Parameters:
+### Parameters
 
 ```asm
 bomb[0x400fd2] <+4>:  movl   %edx, %eax
 bomb[0x400fd4] <+6>:  subl   %esi, %eax
 bomb[0x400fd6] <+8>:  movl   %eax, %ecx
-bomb[0x400fd8] <+10>: shrl   $0x1f, %ecx
+bomb[0x400fd8] <+10>: shrl   $0x1f, %ecx ; shift right logical
 bomb[0x400fdb] <+13>: addl   %ecx, %eax
-bomb[0x400fdd] <+15>: sarl   %eax
+bomb[0x400fdd] <+15>: sarl   %eax        ; shift arithmetic right
+bomb[0x400fdf] <+17>: leal   (%rax,%rsi), %ecx
 ```
 
-1. `edx` -> `eax`: 14
-1. `eax` - `esi` : 14 - 0
-1. `ecx`: `eax` 14
-1. `ecx >> 31`: `0b1110 >> 31` = `0b0000` = 0
-1. `ecx` + `eax`: 0 + 14 = 14 = `0b1110`
-1. `CF` = `eax >> 1`: `CF` = 0, `eax` = 7
+1. `<+4 ~ +8>`: `ecx = eax = edx - esi`
+1. `<+10>`: `ecx = sign bit` (`ecx >> 31`)
+1. `<+13>`: `eax = sign + eax` (for negative floor division)
+1. `<+15>`: `eax = eax >> 1` (preserve the sign bit)
+1. `<+17>`: `ecx = rax + rsi * 1`
+
+#### C code with the same logic
+
+```c
+int func4(int node, int low, int high) {
+	int size = high - low;
+	int sign = (size >> (sizeof (int) * 8 - 1) ) & 1; // 4bytes * 8bit - 1bit
+	int mid = low + (size + sign) / 2; // for negative floor division
+}
+```
+
+### Compares with the 1st value
+
+- `edi`: 1st input
+- `ecx`: mid
 
 ```asm
-bomb[0x400fdf] <+17>: leal   (%rax,%rsi), %ecx
 bomb[0x400fe2] <+20>: cmpl   %edi, %ecx
 bomb[0x400fe4] <+22>: jle    0x400ff2       ; <+36>
+
+bomb[0x400ff7] <+41>: cmpl   %edi, %ecx
+bomb[0x400ff9] <+43>: jge    0x401007       ; <+57>
+
+bomb[0x401007] <+57>: addq   $0x8, %rsp
+bomb[0x40100b] <+61>: retq
 ```
 
-1. `ecx` = `rax` + `rsi` * 1: 7 = 7 + 0 * 1
-1. `edi` >= `ecx`: 13 >= 7
-1. `jle <+36>`
+1. `<+20>`: `1st >= mid`
+   1. `<+41>`: `1st <= mid` (`1st == mid`)
+      1. `<+57>`: return `func4`
+   1. `<+45>`: `1st > mid`
+1. `<+24>`: `1st < mid`
+
+#### `1st == mid`
 
 ```asm
-bomb[0x400fe6] <+24>: leal   -0x1(%rcx), %edx
-bomb[0x400fe9] <+27>: callq  0x400fce       ; <+0>
-bomb[0x400fee] <+32>: addl   %eax, %eax
-bomb[0x400ff0] <+34>: jmp    0x401007       ; <+57>
+bomb[0x400fe2] <+20>: cmpl   %edi, %ecx
+bomb[0x400fe4] <+22>: jle    0x400ff2       ; <+36>
+
 bomb[0x400ff2] <+36>: movl   $0x0, %eax
 bomb[0x400ff7] <+41>: cmpl   %edi, %ecx
 bomb[0x400ff9] <+43>: jge    0x401007       ; <+57>
-bomb[0x400ffb] <+45>: leal   0x1(%rcx), %esi
-bomb[0x400ffe] <+48>: callq  0x400fce       ; <+0>
-bomb[0x401003] <+53>: leal   0x1(%rax,%rax), %eax
+
+bomb[0x401007] <+57>: addq   $0x8, %rsp
+bomb[0x40100b] <+61>: retq
 ```
 
-`<+36>`
-1. `eax`: 0
-1. `edi` <= `ecx`: 13 <= 7
-   1. `jge <+57>`
-1. `esi` = `rcx + 1`: 7 + 1 = 8
-1. `callq <+0>`
+1. `eax = 0`
+1. return `0` 
 
-#### Call func4 2nd
+#### `1st > mid`
 
-Parameters:
+`<+48>`: Call `func4` again
 
 ```asm
-bomb[0x400fd2] <+4>:  movl   %edx, %eax
-bomb[0x400fd4] <+6>:  subl   %esi, %eax
-bomb[0x400fd6] <+8>:  movl   %eax, %ecx
-bomb[0x400fd8] <+10>: shrl   $0x1f, %ecx
-bomb[0x400fdb] <+13>: addl   %ecx, %eax
-bomb[0x400fdd] <+15>: sarl   %eax
-```
-
-1. `edx` -> `eax`: 14
-1. `eax` - `esi` : 14 - 8 = 6
-1. `ecx`: `eax` 6
-1. `ecx << 31`: `0b0110` = 0
-1. `eax` = `ecx` + `eax`: 0 + 6 = 6 = `0b0110`
-1. `CF` = `eax >> 1`: `CF` = 0, `eax` = `0b0011` = 3
-
-```asm
-bomb[0x400fdf] <+17>: leal   (%rax,%rsi), %ecx
 bomb[0x400fe2] <+20>: cmpl   %edi, %ecx
 bomb[0x400fe4] <+22>: jle    0x400ff2       ; <+36>
-```
 
-1. `ecx` = `rax` + `rsi` * 1: 11 = 3 + 8 * 1
-1. `edi` >= `ecx`: 13 >= 11
-1. `jle <+36>`
-
-```asm
-bomb[0x400fe6] <+24>: leal   -0x1(%rcx), %edx
-bomb[0x400fe9] <+27>: callq  0x400fce       ; <+0>
-bomb[0x400fee] <+32>: addl   %eax, %eax
-bomb[0x400ff0] <+34>: jmp    0x401007       ; <+57>
-bomb[0x400ff2] <+36>: movl   $0x0, %eax
-bomb[0x400ff7] <+41>: cmpl   %edi, %ecx
-bomb[0x400ff9] <+43>: jge    0x401007       ; <+57>
-bomb[0x400ffb] <+45>: leal   0x1(%rcx), %esi
-bomb[0x400ffe] <+48>: callq  0x400fce       ; <+0>
-bomb[0x401003] <+53>: leal   0x1(%rax,%rax), %eax
-```
-
-`<+36>`
-1. `eax`: 0
-1. `edi` <= `ecx`: 13 <= 11
-   1. `jge <+57>`
-1. `esi` = `rcx + 1`: 11 + 1 = 12
-1. `callq <+0>`
-
-#### Call func4 3rd
-
-Parameters:
-
-```asm
-bomb[0x400fd2] <+4>:  movl   %edx, %eax
-bomb[0x400fd4] <+6>:  subl   %esi, %eax
-bomb[0x400fd6] <+8>:  movl   %eax, %ecx
-bomb[0x400fd8] <+10>: shrl   $0x1f, %ecx
-bomb[0x400fdb] <+13>: addl   %ecx, %eax
-bomb[0x400fdd] <+15>: sarl   %eax
-```
-
-1. `edx` -> `eax`: 14
-1. `eax` - `esi` : 14 - 12 = 2
-1. `ecx`: `eax` 2
-1. `ecx << 31`: `0b0010` = 0
-1. `eax` = `ecx` + `eax`: 0 + 2 = 2 = `0b0010`
-1. `CF` = `eax >> 1`: `CF` = 0, `eax` = `0b0001` = 1
-
-```asm
-bomb[0x400fdf] <+17>: leal   (%rax,%rsi), %ecx
-bomb[0x400fe2] <+20>: cmpl   %edi, %ecx
-bomb[0x400fe4] <+22>: jle    0x400ff2       ; <+36>
-```
-
-1. `ecx` = `rax` + `rsi` * 1: 13 = 1 + 12 * 1
-1. `edi` >= `ecx`: 13 >= 13
-1. `jle <+36>`
-
-```asm
-bomb[0x400fe6] <+24>: leal   -0x1(%rcx), %edx
-bomb[0x400fe9] <+27>: callq  0x400fce       ; <+0>
-bomb[0x400fee] <+32>: addl   %eax, %eax
-bomb[0x400ff0] <+34>: jmp    0x401007       ; <+57>
 bomb[0x400ff2] <+36>: movl   $0x0, %eax
 bomb[0x400ff7] <+41>: cmpl   %edi, %ecx
 bomb[0x400ff9] <+43>: jge    0x401007       ; <+57>
@@ -224,44 +175,57 @@ bomb[0x401007] <+57>: addq   $0x8, %rsp
 bomb[0x40100b] <+61>: retq
 ```
 
-`<+36>`
-1. `eax`: 0
-1. `edi` <= `ecx`: 13 <= 13
-1. `jge <+57>`
-1. Step Out func4 (3rd)
-1. `func4 <+53>`, `eax` = `rax + rax * 1 + 1` = 0 + 0 * 1 + 1 = 1
-1. Step Out func4 (2nd)
-1. `func4 <+53>`, `eax` = `rax + rax * 1 + 1` = 1 + 1 * 1 + 1 = 3
-1. Step Out func4 (1st)
-1. `phase4 <+65>`
+- `edx`: `edx` (`high`)
+- `esi`: `rcx + 1` (`rcx = mid`)
+- `edi`: 1st input value
 
-### Phase 4
+After calling `func4`:
 
-```asm
-bomb[0x40104d] <+65>: testl  %eax, %eax
-bomb[0x40104f] <+67>: jne    0x401058       ; <+76>
-```
+- `eax = 2 * func4(1st, mid+1, high) + 1`
+- return `eax`
 
-1. `eax` & `eax` = 3 & 3 = 3
-1. `rflags` = 206 = `10 0000 0110`
-1. `jne <+76>`: ZF (6nd) = 0
-1. bomb!
+#### `1st < mid`
 
-## Solution
+`<+48>`: Call `func4` again
 
 ```asm
-(lldb) b 0x40104d
-(lldb) reg r # check eax is 0
-(lldb) r
+bomb[0x400fe2] <+20>: cmpl   %edi, %ecx
+bomb[0x400fe4] <+22>: jle    0x400ff2       ; <+36>
+bomb[0x400fe6] <+24>: leal   -0x1(%rcx), %edx
+bomb[0x400fe9] <+27>: callq  0x400fce       ; <+0>
+bomb[0x400fee] <+32>: addl   %eax, %eax
+bomb[0x400ff0] <+34>: jmp    0x401007       ; <+57>
+
+bomb[0x401007] <+57>: addq   $0x8, %rsp
+bomb[0x40100b] <+61>: retq
 ```
 
-```asm
-bomb[0x401051] <+69>: cmpl   $0x0, 0xc(%rsp)
-bomb[0x401056] <+74>: je     0x40105d       ; <+81>
-bomb[0x401058] <+76>: callq  0x40143a       ; explode_bomb
+- `edx`: `edx = rcx - 1` (`high = mid - 1`)
+- `esi`: `esi` (`esi = low`)
+- `edi`: 1st input value
+
+After calling `func4`:
+
+- `eax = 2 * func4(1st, low, mid - 1)`
+- return `eax`
+
+#### C code with the same logic
+
+```c
+if (node == mid) {
+	return 0;
+}
+
+if (node < mid) {
+	return 2 * func4(node, low, mid - 1);
+} else {
+	return 2 * func4(node, mid + 1, high) + 1; // +1 when moving right
+}
 ```
 
-Answer:
+---
+
+## Answer
 
 ```bash
 0 0
