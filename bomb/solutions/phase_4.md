@@ -43,7 +43,7 @@ bomb[0x401033] <+39>: jbe    0x40103a       ; <+46>
 bomb[0x401035] <+41>: callq  0x40143a       ; explode_bomb
 ```
 
-- `jbe` compares using unsigned logic. 
+- `jbe` compares using unsigned logic.
 - `0 <= $rsp + 8 <= 14`
 
 ### Call func4
