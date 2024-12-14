@@ -4,6 +4,11 @@
   - [README](http://csapp.cs.cmu.edu/3e/README-bomblab)
   - [PDF](http://csapp.cs.cmu.edu/3e/bomblab.pdf)
   - [Release Notes](http://csapp.cs.cmu.edu/3e/bomblab-release.html)
+- Carnegie Mellon University
+  - [x86-64 Machine-Level Programming](https://www.cs.cmu.edu/~fp/courses/15213-s07/misc/asm64-handout.pdf)
+  - [GDB notes](https://csapp.cs.cmu.edu/3e/docs/gdbnotes-x86-64.pdf)
+- Stanford
+  - [Guide to x86-64](https://web.stanford.edu/class/cs107/guide/x86-64.html)
 
 ## Self-Study Handout
 
