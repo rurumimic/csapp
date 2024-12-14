@@ -35,7 +35,7 @@ bomb/
 - Phase 3: [solution](solutions/phase_3.md), [phase_3.asm](phases/phase_3.asm)
 - Phase 4: [solution](solutions/phase_4.md), [phase_4.asm](phases/phase_4.asm), [phase_4.c](c/phase_4.c)
 - Phase 5: [solution](solutions/phase_5.md), [phase_5.asm](phases/phase_5.asm)
-- Phase 6
+- Phase 6: [solution](solutions/phase_6.md), [phase_5.asm](phases/phase_6.asm)
 
 Subroutines: [phases/subroutines/*.asm](phases/subroutines)
 
