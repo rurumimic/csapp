@@ -14,7 +14,7 @@ lldb ./bomb/bomb
 (lldb) di -n phase_2
 ```
 
-Prologue:
+### Prologue
 
 ```asm
 bomb`phase_2:
@@ -28,7 +28,7 @@ bomb`phase_2:
     - 16 byte alignment: floating point, SIMD
   - `0x18` (six numbers)
 
-Call `read_six_numbers`:
+### Call `read_six_numbers`
 
 ```asm
 0x400f02 <+6>:  movq   %rsp, %rsi
@@ -54,7 +54,7 @@ rsp = 0x00007fffffffe1b0
 0x7fffffffe1d0: 18 e3 ff ff ff 7f 00 00 18 e3 ff ff ff 7f 00 00  ................
 ```
 
-Loop:
+### Loop
 
 ```asm
 0x400f15 <+25>: jmp    0x400f30       ; <+52>
@@ -72,7 +72,7 @@ Loop:
 0x400f3a <+62>: jmp    0x400f17       ; <+27>
 ```
 
-C code with the same logic:
+#### C code with the same logic
 
 ```c
 int xs[6] = {1, 2, 4, 8, 16, 32};
@@ -84,7 +84,7 @@ for (int i = 1; i < 6; i++) {
 }
 ```
 
-Numbers stored on the stack in 4 bytes:
+#### Numbers stored on the stack in 4 bytes
 
 ```asm
 0x7fffffffe1b0: 1 ; (lldb) x/d -s4 $rsp
@@ -95,7 +95,7 @@ Numbers stored on the stack in 4 bytes:
 0x7fffffffe1c4: 32 ; (lldb) x/d -s4 '$rsp + 0x18'
 ```
 
-Assembly logic sequence:
+#### Assembly logic sequence
 
 1. `rbx` = `0x00007fffffffe1b4` = 2
 1. `rbp` = `0x00007fffffffe1c8`
@@ -124,7 +124,7 @@ Assembly logic sequence:
    1. `rbp == rbx`
 1. `jmp <+64>`
 
-Epilogue:
+### Epilogue
 
 ```asm
 0x400f3c <+64>: addq   $0x28, %rsp
@@ -133,6 +133,8 @@ Epilogue:
 0x400f42 <+70>: retq
 ```
 
+---
+
 ## Disassemble `read_six_numbers`
 
 ```bash
@@ -140,7 +142,7 @@ Epilogue:
 (lldb) di -n read_six_numbers
 ```
 
-Prologue:
+### Prologue
 
 ```asm
 bomb`read_six_numbers:
@@ -152,7 +154,7 @@ bomb[0x40145c] <+0>:  subq   $0x18, %rsp
     - 16 byte alignment: floating point, SIMD
   - `0x08` (two numbers)
 
-Stack pointer address value movement:
+#### Stack pointer address value movement
 
 ```asm
 ; phase_2
@@ -166,7 +168,13 @@ rsp = 0x00007fffffffe1a8
 rsp = 0x00007fffffffe190
 ```
 
-Setting sscanf function parameters:
+### Call sscanf
+
+```asm
+bomb[0x40148a] <+46>: callq  0x400bf0       ; symbol stub for: __isoc99_sscanf
+```
+
+#### Setting sscanf function parameters
 
 ```asm
 bomb[0x401460] <+4>:  movq   %rsi, %rdx
@@ -186,13 +194,13 @@ bomb[0x40147c] <+32>: leaq   0x8(%rsi), %r8
 5. `rsp`
 6. `rsp + 0x8`
 
-Setting the second parameter of the sscanf function:
+#### Setting the second parameter of the sscanf function
 
 ```asm
 bomb[0x401480] <+36>: movl   $0x4025c3, %esi ; imm = 0x4025C3
 ```
 
-Examine string value:
+##### Examine string value
 
 ```bash
 (gdb) x/s 0x4025c3
@@ -201,7 +209,7 @@ Examine string value:
 0x004025c3: "%d %d %d %d %d %d"
 ```
 
-Protocol of x86-64 System V ABI:
+#### Protocol of x86-64 System V ABI
 
 ```asm
 bomb[0x401485] <+41>: movl   $0x0, %eax
@@ -209,20 +217,15 @@ bomb[0x401485] <+41>: movl   $0x0, %eax
 
 - clear `AL` (zero FP args in XMM registers)
 
-Call sscanf:
+### Check if return > 5
 
 ```asm
 bomb[0x40148a] <+46>: callq  0x400bf0       ; symbol stub for: __isoc99_sscanf
-```
-
-Compare number of numbers:
-
-```asm
 bomb[0x40148f] <+51>: cmpl   $0x5, %eax
 bomb[0x401492] <+54>: jg     0x401499       ; <+61>
 ```
 
-View FLAG:
+#### View FLAG
 
 ```bash
 (lldb) register read
@@ -244,7 +247,7 @@ rflags = 0x0000000000000202
   - `eax - 5 < 0`: SF = 1
 - `jg`: `ZF == 0` and `SF == OF`
 
-Stack state:
+#### Stack state
 
 ```asm
 (lldb) x -c64 '$rsp-16'
@@ -261,7 +264,7 @@ Stack state:
 | `rsp + 0x08` (`0x7fffffffe198`) | 6th number     | `0x00007fffffffe1c4`       |
 | `rsp + 0x00` (`0x7fffffffe190`) | 5th number     | `0x00007fffffffe1c0`       |
 
-Epilogue:
+### Epilogue
 
 ```asm
 bomb[0x401494] <+56>: callq  0x40143a       ; explode_bomb
@@ -269,7 +272,9 @@ bomb[0x401499] <+61>: addq   $0x18, %rsp
 bomb[0x40149d] <+65>: retq
 ```
 
-Answer:
+---
+
+## Answer
 
 ```bash
 1 2 4 8 16 32
