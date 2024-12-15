@@ -7,16 +7,184 @@ gdb ./bomb/bomb
 lldb ./bomb/bomb
 ```
 
-## Disassemble Phase Defused
+## Data section
 
-### after phase_6
+All sections:
 
 ```asm
-bomb[0x4015d8] <+20>:  cmpl   $0x6, 0x202181(%rip) ; num_input_strings
+(lldb) image dump sections
+Dumping sections for 1 modules.
+  SectID     Type             File Address                             Perm File Off.  File Size  Flags      Section Name
+  ---------- ---------------- ---------------------------------------  ---- ---------- ---------- ---------- ----------------------------
+; ...
+  0x00000018 data             [0x00000000006030e0-0x0000000000603740)  rw-  0x000030e0 0x00000660 0x00000003 bomb.PT_LOAD[1]..data
+; ...
+```
+
+Data section:
+
+```asm
+(lldb) x -c656 0x6030e0
+```
+
+<details>
+
+<summary>x -c656 0x6030e0</summary>
+
+```asm
+(lldb) x -c656 0x6030e0
+
+0x006030e0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+0x006030f0: 24 00 00 00 00 00 00 00 10 31 60 00 00 00 00 00  $........1`.....
+0x00603100: 30 31 60 00 00 00 00 00 00 00 00 00 00 00 00 00  01`.............
+0x00603110: 08 00 00 00 00 00 00 00 90 31 60 00 00 00 00 00  .........1`.....
+0x00603120: 50 31 60 00 00 00 00 00 00 00 00 00 00 00 00 00  P1`.............
+0x00603130: 32 00 00 00 00 00 00 00 70 31 60 00 00 00 00 00  2.......p1`.....
+0x00603140: b0 31 60 00 00 00 00 00 00 00 00 00 00 00 00 00  .1`.............
+0x00603150: 16 00 00 00 00 00 00 00 70 32 60 00 00 00 00 00  ........p2`.....
+0x00603160: 30 32 60 00 00 00 00 00 00 00 00 00 00 00 00 00  02`.............
+0x00603170: 2d 00 00 00 00 00 00 00 d0 31 60 00 00 00 00 00  -........1`.....
+0x00603180: 90 32 60 00 00 00 00 00 00 00 00 00 00 00 00 00  .2`.............
+0x00603190: 06 00 00 00 00 00 00 00 f0 31 60 00 00 00 00 00  .........1`.....
+0x006031a0: 50 32 60 00 00 00 00 00 00 00 00 00 00 00 00 00  P2`.............
+0x006031b0: 6b 00 00 00 00 00 00 00 10 32 60 00 00 00 00 00  k........2`.....
+0x006031c0: b0 32 60 00 00 00 00 00 00 00 00 00 00 00 00 00  .2`.............
+0x006031d0: 28 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  (...............
+0x006031e0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+0x006031f0: 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+0x00603200: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+0x00603210: 63 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  c...............
+0x00603220: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+0x00603230: 23 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  #...............
+0x00603240: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+0x00603250: 07 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+0x00603260: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+0x00603270: 14 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+0x00603280: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+0x00603290: 2f 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  /...............
+0x006032a0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+0x006032b0: e9 03 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+0x006032c0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+0x006032d0: 4c 01 00 00 01 00 00 00 e0 32 60 00 00 00 00 00  L........2`.....
+0x006032e0: a8 00 00 00 02 00 00 00 f0 32 60 00 00 00 00 00  .........2`.....
+0x006032f0: 9c 03 00 00 03 00 00 00 00 33 60 00 00 00 00 00  .........3`.....
+0x00603300: b3 02 00 00 04 00 00 00 10 33 60 00 00 00 00 00  .........3`.....
+0x00603310: dd 01 00 00 05 00 00 00 20 33 60 00 00 00 00 00  ........ 3`.....
+0x00603320: bb 01 00 00 06 00 00 00 00 00 00 00 00 00 00 00  ................
+0x00603330: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+0x00603340: 29 26 40 00 00 00 00 00 43 26 40 00 00 00 00 00  )&@.....C&@.....
+0x00603350: 5d 26 40 00 00 00 00 00 00 00 00 00 00 00 00 00  ]&@.............
+0x00603360: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+```
+
+</details>
+
+
+## Disassemble Phase Defused
+
+```bash
+b phase_defused
+di -n phase_defused
+```
+
+### Prologue and Epilogue
+
+```asm
+bomb`phase_defused:
+bomb[0x4015c4] <+0>:   subq   $0x78, %rsp
+bomb[0x4015c8] <+4>:   movq   %fs:0x28, %rax
+bomb[0x4015d1] <+13>:  movq   %rax, 0x68(%rsp)
+bomb[0x4015d6] <+18>:  xorl   %eax, %eax
+
+bomb[0x40163f] <+123>: movq   0x68(%rsp), %rax
+bomb[0x401644] <+128>: xorq   %fs:0x28, %rax
+bomb[0x40164d] <+137>: je     0x401654       ; <+144>
+bomb[0x40164f] <+139>: callq  0x400b30       ; symbol stub for: __stack_chk_fail
+bomb[0x401654] <+144>: addq   $0x78, %rsp
+bomb[0x401658] <+148>: retq
+```
+
+### Complete 6 phases 
+
+After defused 6 phase:
+
+```bash
+Welcome to my fiendish little bomb. You have 6 phases with
+which to blow yourself up. Have a nice day!
+Phase 1 defused. How about the next one?
+That's number 2.  Keep going!
+Halfway there!
+So you got that one.  Try this one.
+Good work!  On to the next...
 ```
 
 ```asm
-x '0x202181 + 0x4015d8'
+bomb[0x4015d8] <+20>:  cmpl   $0x6, 0x202181(%rip) ; num_input_strings
+bomb[0x4015df] <+27>:  jne    0x40163f       ; <+123>
+
+bomb[0x40163f] <+123>: movq   0x68(%rsp), %rax
+```
+
+```asm
+(lldb) x '0x202181 + 0x4015d8'
+(lldb) x 0x603759
+
+0x00603759: 00 00 00 00 00 00 00 06 00 00 00 00 00 00 00 a0  ................
+```
+
+### Trigger secret phase 
+
+```asm
+bomb[0x4015e1] <+29>:  leaq   0x10(%rsp), %r8
+bomb[0x4015e6] <+34>:  leaq   0xc(%rsp), %rcx
+bomb[0x4015eb] <+39>:  leaq   0x8(%rsp), %rdx
+bomb[0x4015f0] <+44>:  movl   $0x402619, %esi ; imm = 0x402619
+bomb[0x4015f5] <+49>:  movl   $0x603870, %edi ; imm = 0x603870
+bomb[0x4015fa] <+54>:  callq  0x400bf0       ; symbol stub for: __isoc99_sscanf
+bomb[0x4015ff] <+59>:  cmpl   $0x3, %eax
+bomb[0x401602] <+62>:  jne    0x401635       ; <+113>
+
+bomb[0x401635] <+113>: movl   $0x402558, %edi ; imm = 0x402558
+bomb[0x40163a] <+118>: callq  0x400b10       ; symbol stub for: puts
+```
+
+#### Sscanf Parameters
+
+```asm
+(lldb) x/s 0x402619
+0x00402619: "%d %d %s"
+```
+
+```asm
+(lldb) x/s 0x603870
+0x00603870: "7 0"
+```
+
+- `esi`: `"%d %d %s"`
+- `edi`: `"7 0"`
+
+Answers in Phase 4 don't match.
+
+#### Complete message
+
+```asm
+(lldb) x/s 0x402558
+0x00402558: "Congratulations! You've defused the bomb!"
+```
+
+#### Compare strings
+
+```asm
+bomb[0x401604] <+64>:  movl   $0x402622, %esi ; imm = 0x402622
+bomb[0x401609] <+69>:  leaq   0x10(%rsp), %rdi
+bomb[0x40160e] <+74>:  callq  0x401338       ; strings_not_equal
+bomb[0x401613] <+79>:  testl  %eax, %eax
+bomb[0x401615] <+81>:  jne    0x401635       ; <+113>
+```
+
+```asm
+(lldb) x/s 0x402622
+0x00402622: "DrEvil"
 ```
 
 ### Change Phase 4 Answer
@@ -25,19 +193,202 @@ x '0x202181 + 0x4015d8'
 7 0 DrEvil
 ```
 
+And retry.
+
+#### After changing the answers in phase 4
+
+```asm
+(lldb) x/s 0x603870
+0x00603870: "7 0 DrEvil"
+```
+
+### To secret phase
+
+```asm
+bomb[0x401617] <+83>:  movl   $0x4024f8, %edi ; imm = 0x4024F8
+bomb[0x40161c] <+88>:  callq  0x400b10       ; symbol stub for: puts
+bomb[0x401621] <+93>:  movl   $0x402520, %edi ; imm = 0x402520
+bomb[0x401626] <+98>:  callq  0x400b10       ; symbol stub for: puts
+bomb[0x40162b] <+103>: movl   $0x0, %eax
+bomb[0x401630] <+108>: callq  0x401242       ; secret_phase
+```
+
+```asm
+(lldb) x/s 0x4024f8
+0x004024f8: "Curses, you've found the secret phase!"
+
+(lldb) x/s 0x402520
+0x00402520: "But finding it and solving it are quite different..."
+```
+
+---
+
 ## Disassemble Secret Phase
 
-```asm
-Curses, you've found the secret phase!
-But finding it and solving it are quite different...
-```
+### Prologue and Epilogue
 
 ```asm
-0x40126e <+44>: movl   $0x6030f0, %edi           ; imm = 0x6030F0
+bomb`secret_phase:
+bomb[0x401242] <+0>:  pushq  %rbx
+
+bomb[0x401291] <+79>: popq   %rbx
+bomb[0x401292] <+80>: retq
 ```
 
+### Convert string to decimal
+
 ```asm
-(lldb) x/w -c156 0x6030f0
+bomb[0x401243] <+1>:  callq  0x40149e       ; read_line
+bomb[0x401248] <+6>:  movl   $0xa, %edx
+bomb[0x40124d] <+11>: movl   $0x0, %esi
+bomb[0x401252] <+16>: movq   %rax, %rdi
+bomb[0x401255] <+19>: callq  0x400bd0       ; symbol stub for: strtol
+bomb[0x40125a] <+24>: movq   %rax, %rbx
+```
+
+- `edx`: 10
+- `esi`: NULL
+- `rdi`: input string
+- `rax`: decimal value
+- `rbx`: backup value
+
+#### Enter a number less than 1001
+
+```asm
+bomb[0x40125d] <+27>: leal   -0x1(%rax), %eax
+bomb[0x401260] <+30>: cmpl   $0x3e8, %eax   ; imm = 0x3E8
+bomb[0x401265] <+35>: jbe    0x40126c       ; <+42>
+bomb[0x401267] <+37>: callq  0x40143a       ; explode_bomb
+```
+
+1. `rax`: input value
+1. `rax -= 1`
+1. `0x3e8 >= rax`: `1000 >= rax`
+
+```asm
+(lldb) p 0x3e8
+(int) 1000
+```
+
+#### Call fun7
+
+```asm
+bomb[0x40126c] <+42>: movl   %ebx, %esi
+bomb[0x40126e] <+44>: movl   $0x6030f0, %edi ; imm = 0x6030F0
+bomb[0x401273] <+49>: callq  0x401204       ; fun7
+bomb[0x401278] <+54>: cmpl   $0x2, %eax
+bomb[0x40127b] <+57>: je     0x401282       ; <+64>
+bomb[0x40127d] <+59>: callq  0x40143a       ; explode_bomb
+bomb[0x401282] <+64>: movl   $0x402438, %edi ; imm = 0x402438
+bomb[0x401287] <+69>: callq  0x400b10       ; symbol stub for: puts
+bomb[0x40128c] <+74>: callq  0x4015c4       ; phase_defused
+```
+
+- `esi`: secret phase input value (fun7's parameter)
+- `edi`: `0x6030f0` data section's address
+- `eax == 2`: result of fun7 should be 2.
+
+```asm
+(lldb) x/s 0x402438
+0x00402438: "Wow! You've defused the secret stage!"
+```
+
+---
+
+## Disassemble fun7
+
+### Prologue and Epilogue
+
+```asm
+bomb`fun7:
+bomb[0x401204] <+0>:  subq   $0x8, %rsp
+bomb[0x401208] <+4>:  testq  %rdi, %rdi
+bomb[0x40120b] <+7>:  je     0x401238       ; <+52>
+
+bomb[0x401238] <+52>: movl   $0xffffffff, %eax ; imm = 0xFFFFFFFF
+bomb[0x40123d] <+57>: addq   $0x8, %rsp
+bomb[0x401241] <+61>: retq
+```
+
+- `<+4>`: if `rdi == NULL (0)`, return fun7
+
+### Loop
+
+```asm
+bomb[0x40120d] <+9>:  movl   (%rdi), %edx
+bomb[0x40120f] <+11>: cmpl   %esi, %edx
+bomb[0x401211] <+13>: jle    0x401220       ; <+28>
+bomb[0x401213] <+15>: movq   0x8(%rdi), %rdi
+bomb[0x401217] <+19>: callq  0x401204       ; <+0>
+bomb[0x40121c] <+24>: addl   %eax, %eax
+bomb[0x40121e] <+26>: jmp    0x40123d       ; <+57>
+bomb[0x401220] <+28>: movl   $0x0, %eax
+bomb[0x401225] <+33>: cmpl   %esi, %edx
+bomb[0x401227] <+35>: je     0x40123d       ; <+57>
+bomb[0x401229] <+37>: movq   0x10(%rdi), %rdi
+bomb[0x40122d] <+41>: callq  0x401204       ; <+0>
+bomb[0x401232] <+46>: leal   0x1(%rax,%rax), %eax
+bomb[0x401236] <+50>: jmp    0x40123d       ; <+57>
+```
+
+- `edx = (rdi)`: `0x6030f0` (`0x24`)
+- `esi`: secret phase input value
+- `<+15>`: `esi < edx`: `input < edx`
+  - `rdi += 8`: `0x6030f8` (`0x603110`). go left node
+  - `<+19>`: call fun7 again
+  - `<+24>`: return `2 * fun7()`
+- `<+28>`: `esi >= edx`
+  - `eax`: 0
+  - `<+37>`: `esi > edx`
+    - `rdi += 16`: `0x603100` (`0x603130`). go right node
+    - `<+41>`: call fun7 again
+    - `<+26>`: return `2 * fun7() + 1`
+- `<+57>`: `esi == edx`. loop ended
+
+#### Binary tree
+
+Hex:
+
+```txt
+                            0x0024
+                ┌──────────────┴─────────────┐
+              0x0008                      0x0032
+         ┌──────┴──────┐              ┌──────┴──────┐
+      0x0006         0x0016        0x002d        0x006b
+     ┌───┴───┐     ┌───┴───┐      ┌───┴───┐     ┌───┴───┐
+  0x0001  0x0007 0x0014 0x0023 0x0028  0x002f 0x0063 0x03e9
+```
+
+Decimal:
+
+```txt
+                               36
+                ┌──────────────┴─────────────┐
+                8                           50
+         ┌──────┴──────┐              ┌──────┴──────┐
+         6             22            45            107
+     ┌───┴───┐     ┌───┴───┐      ┌───┴───┐     ┌───┴───┐
+     1       7    20      35     40       47    99     1001
+```
+
+Result:
+
+```txt
+                                                               0
+                         ┌─────────────────────────────────────┴────────────────────────────────────────┐
+                       0 = 2*0                                                                        1 = 2*0+1 
+         ┌───────────────┴───────────────────┐                                        ┌─────────────────┴──────────────────┐
+       0 = 2*2*0                           2 = 2*(2*0+1)                            1 = 2*(2*0)+1                        3 = 2*(2*0+1)+1
+┌────────┴────────────┐        ┌─────────────┴────────────┐             ┌─────────────┴────────────┐         ┌─────────────┴────────────┐
+0 = 2*2*2*0  4 = 2*2*(2*0+1) 2 = 2*(2*(2*0)+1)  6 = 2*(2*(2*0+1)+1)   1 = 2*2*(2*0)+1   5 = 2*2*(2*0+1)+1  3 = 2*(2*(2*0)+1)+1        7 = 2*(2*(2*0+1)+1)+1
+```
+
+<details>
+
+<summary>▶ x/x -c120 0x6030f0</summary>
+
+```asm
+(lldb) x/x -c120 0x6030f0
 0x006030f0: 0x00000024 0x00000000 0x00603110 0x00000000
 0x00603100: 0x00603130 0x00000000 0x00000000 0x00000000
 0x00603110: 0x00000008 0x00000000 0x00603190 0x00000000
@@ -68,23 +419,16 @@ But finding it and solving it are quite different...
 0x006032a0: 0x00000000 0x00000000 0x00000000 0x00000000
 0x006032b0: 0x000003e9 0x00000000 0x00000000 0x00000000
 0x006032c0: 0x00000000 0x00000000 0x00000000 0x00000000
-0x006032d0: 0x0000014c 0x00000001 0x006032e0 0x00000000
-0x006032e0: 0x000000a8 0x00000002 0x00000000 0x00000000
-0x006032f0: 0x0000039c 0x00000003 0x00603300 0x00000000
-0x00603300: 0x000002b3 0x00000004 0x00603310 0x00000000
-0x00603310: 0x000001dd 0x00000005 0x00603320 0x00000000
-0x00603320: 0x000001bb 0x00000006 0x006032d0 0x00000000
-0x00603330: 0x00000000 0x00000000 0x00000000 0x00000000
-0x00603340: 0x00402629 0x00000000 0x00402643 0x00000000
-0x00603350: 0x0040265d 0x00000000 0x00000000 0x00000000
 ```
+
+</details>
 
 <details>
 
-<summary>x/d -c156 0x6030f0</summary>
+<summary>▶ x/d -c120 0x6030f0</summary>
 
 ```asm
-(lldb) x/d -c156 0x6030f0
+(lldb) x/d -c120 0x6030f0
 0x006030f0: 36
 0x006030f4: 0
 0x006030f8: 6304016
@@ -205,42 +549,6 @@ But finding it and solving it are quite different...
 0x006032c4: 0
 0x006032c8: 0
 0x006032cc: 0
-0x006032d0: 332
-0x006032d4: 1
-0x006032d8: 6304480
-0x006032dc: 0
-0x006032e0: 168
-0x006032e4: 2
-0x006032e8: 0
-0x006032ec: 0
-0x006032f0: 924
-0x006032f4: 3
-0x006032f8: 6304512
-0x006032fc: 0
-0x00603300: 691
-0x00603304: 4
-0x00603308: 6304528
-0x0060330c: 0
-0x00603310: 477
-0x00603314: 5
-0x00603318: 6304544
-0x0060331c: 0
-0x00603320: 443
-0x00603324: 6
-0x00603328: 6304464
-0x0060332c: 0
-0x00603330: 0
-0x00603334: 0
-0x00603338: 0
-0x0060333c: 0
-0x00603340: 4204073
-0x00603344: 0
-0x00603348: 4204099
-0x0060334c: 0
-0x00603350: 4204125
-0x00603354: 0
-0x00603358: 0
-0x0060335c: 0
 ```
 
 </details>
