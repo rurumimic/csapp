@@ -243,9 +243,16 @@ output:  aduier
 So:
 
 ```txt
-input :  abcdefghijklmno
-        pqrstuvwxyz
+input :
+         !"#$%&'()*+,-./
+        0123456789:;<=>?
+        @ABCDEFGHIJKLMNO
+        PQRSTUVWXYZ[\]^_ 
+        `abcdefghijklmno
+        pqrstuvwxyz{|}~ 
+------------------------
         maduiersnfotvbyl
+------------------------
 output:      ers f    yl
 ```
 
@@ -254,8 +261,15 @@ output:      ers f    yl
 ## Answer
 
 ```bash
+)/.%&'
+9?>567
+IONEFG
+Y_^UVW
 ionefg
+y~uvw
 ```
+
+- `<DEL>`: vim insert mode `<Ctrl + V> + <DEL>` 
 
 Phase 5 defused:
 
