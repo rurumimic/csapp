@@ -385,7 +385,7 @@ Result:
 
 <details>
 
-<summary>`x/x -c120 0x6030f0`</summary>
+<summary>x/x -c120 0x6030f0</summary>
 
 ```asm
 (lldb) x/x -c120 0x6030f0
@@ -425,7 +425,7 @@ Result:
 
 <details>
 
-<summary>`x/d -c120 0x6030f0`</summary>
+<summary>x/d -c120 0x6030f0</summary>
 
 ```asm
 (lldb) x/d -c120 0x6030f0
