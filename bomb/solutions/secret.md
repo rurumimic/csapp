@@ -106,7 +106,7 @@ bomb[0x401658] <+148>: retq
 
 ### Complete 6 phases 
 
-After defused 6 phase:
+After phase 6:
 
 ```bash
 Welcome to my fiendish little bomb. You have 6 phases with
